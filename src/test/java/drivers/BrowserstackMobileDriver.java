@@ -16,7 +16,7 @@ public class BrowserstackMobileDriver implements WebDriverProvider {
     static CredentialsConfig config = ConfigFactory.create(CredentialsConfig.class);
     static String userName = config.user();
     static String password = config.key();
-    static String appBrowserstack = config.app();
+    static String appBrowserstack = config.appBrowserstack();
 
     @Override
     public WebDriver createDriver(Capabilities capabilities) {
