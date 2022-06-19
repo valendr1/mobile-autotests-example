@@ -2,6 +2,7 @@ package drivers;
 
 import com.codeborne.selenide.WebDriverProvider;
 import config.CredentialsConfig;
+import config.MobileBrowserstackConfig;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
@@ -12,11 +13,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class BrowserstackMobileDriver implements WebDriverProvider {
-
+    static MobileBrowserstackConfig mobileBrowserstackConfig = ConfigFactory.create(MobileBrowserstackConfig.class);
     static CredentialsConfig config = ConfigFactory.create(CredentialsConfig.class);
+
     static String userName = config.user();
     static String password = config.key();
     static String appBrowserstack = config.appBrowserstack();
+
+    String deviceName = mobileBrowserstackConfig.getDeviceName();
+    String osVersion = mobileBrowserstackConfig.getOsVersion();
+    static String browserstackUrl = mobileBrowserstackConfig.getBaseUrl();
 
     @Override
     public WebDriver createDriver(Capabilities capabilities) {
@@ -30,8 +36,8 @@ public class BrowserstackMobileDriver implements WebDriverProvider {
         mutableCapabilities.setCapability("app", appBrowserstack);
 
         // Specify device and os_version for testing
-        mutableCapabilities.setCapability("device", "Google Pixel 3");
-        mutableCapabilities.setCapability("os_version", "9.0");
+        mutableCapabilities.setCapability("device", deviceName);
+        mutableCapabilities.setCapability("os_version", osVersion);
 
         // Set other BrowserStack capabilities
         mutableCapabilities.setCapability("project", "Mobile Autotest Example");
@@ -42,7 +48,7 @@ public class BrowserstackMobileDriver implements WebDriverProvider {
 
     public static URL getBrowserstackUrl() {
         try {
-            return new URL("http://hub.browserstack.com/wd/hub");
+            return new URL(browserstackUrl);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
